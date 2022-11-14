@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ProductInfo from "../components/Product/ProductInfo";
+import ProductImageGallery from "../components/Product/ProductImageGallery";
 
 const ProductSection = styled.div.attrs(() => ({
-  className: `flex flex-row space-x-4 items-center`
+  className: `flex flex-row space-x-4`
 }))``;
 
 export default function Product() {
@@ -32,6 +33,7 @@ export default function Product() {
 
   return (
     <ProductSection>
+      {product && <ProductImageGallery productImages={product.images} />}
       {product && <ProductInfo product={product} />}
     </ProductSection>
   )
