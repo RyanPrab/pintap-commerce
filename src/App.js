@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <Header/>
-      <main>
+      <main className='container mx-auto'>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/product/:productId" element={<Product/>}/>
