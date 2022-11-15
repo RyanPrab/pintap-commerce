@@ -4,10 +4,12 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
+import Notification from './components/Notification';
 
 function App() {
   return (
     <div>
+      <Notification/>
       <Header/>
       <main className='container mx-auto'>
       <Routes>
