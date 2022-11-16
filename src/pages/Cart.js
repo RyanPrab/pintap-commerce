@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import CartItem from "../components/Cart/CartItem";
+import CartAction from "../components/Cart/CartAction";
 
 const CartSection = styled.div.attrs(() => ({
   className: `flex flex-col space-y-2`
@@ -11,11 +12,15 @@ const Title = styled.h1.attrs(() => ({
 }))``;
 
 const CartWrapper = styled.div.attrs(() => ({
-  className: `flex flex-row space-x-2 justify-center`
+  className: `flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-2 justify-center`
 }))``;
 
 const CartList = styled.div.attrs(() => ({
-  className: `flex flex-col space-y-2 border border-primary rounded-md w-full`
+  className: `flex flex-col space-y-2 border border-primary rounded-md w-full md:w-3/4`
+}))``;
+
+const ActionWrapper = styled.div.attrs(() => ({
+  className: `flex w-full md:w-1/2 h-24`
 }))``;
 
 export default function Cart() {
@@ -68,9 +73,9 @@ export default function Cart() {
             }
           </CartList>
         }
-        <div>
-          Cart Action
-        </div>
+        <ActionWrapper>
+          {myCart && <CartAction cart={myCart?.carts[0]}/>}
+        </ActionWrapper>
       </CartWrapper>
     </CartSection>
   )
