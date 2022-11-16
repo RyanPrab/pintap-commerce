@@ -3,6 +3,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { currency } from "../../helpers";
 import { useState, useEffect } from "react";
 import useAddToCart from "../../hooks/Cart/useAddToCart";
+import useDiscountPrice from "../../hooks/useDiscountPrice";
 
 const Section = styled.div.attrs(() => ({
   className: `flex flex-col space-y-4`
@@ -39,18 +40,20 @@ const AddToCartButton = styled.button.attrs(() => ({
 export default function ProductInfo(props) {
   const { product } = props;
   const { addToCartHandler } = useAddToCart();
+  const { discountPrice, discountPriceHandler } = useDiscountPrice();
   const arrayRating = new Array(Math.round(product.rating)).fill(' ');
 
   const [isDiscount, setIsDiscount] = useState(false);
-  const [discountPrice, setDiscountPrice] = useState(0);
 
   useEffect(() => {
     if (product.discountPercentage || product.discountPercentage > 0) {
       setIsDiscount(true);
-      const newPrice = Math.round(product.price * product.discountPercentage) / 100;
-      setDiscountPrice(newPrice);
+      discountPriceHandler({
+        price: product.price,
+        discountPercentage: product.discountPercentage
+      });
     }
-  }, [product]);
+  }, [product, discountPriceHandler]);
 
   const submitToCartHandler = (params) => {
     const payload = {
