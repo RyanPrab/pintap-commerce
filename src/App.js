@@ -39,7 +39,7 @@ function App() {
         />
       }
       <Header/>
-      <main className='container mx-auto'>
+      <main className='container mx-auto mt-4 mb-10'>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/product/:productId" element={<Product/>}/>

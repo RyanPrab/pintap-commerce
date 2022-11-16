@@ -1,17 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ProductInfo from "../components/Product/ProductInfo";
 import ProductImageGallery from "../components/Product/ProductImageGallery";
+import ProductList from "../components/Category/ProductList";
+import { useDispatch } from 'react-redux';
+import { productAction } from "../store/product-slice";
+
+const Section = styled.div.attrs(() => ({
+  className: `flex flex-col space-y-10`
+}))``;
 
 const ProductSection = styled.div.attrs(() => ({
-  className: `flex flex-row space-x-4`
+  className: `flex flex-col md:flex-row md:space-x-4`
 }))``;
 
 export default function Product() {
   const [product, setProduct] = useState(null);
   const params = useParams();
   const productId = params.productId;
+  const dispatch = useDispatch();
+
+  const lastSeenProductHandler = useCallback((id) => {
+    dispatch(productAction.setLastSeen(id));
+  },[dispatch]);
 
   const getProductHandler = async (id) => {
     try {
@@ -29,12 +41,16 @@ export default function Product() {
 
   useEffect(() => {
     getProductHandler(productId);
-  }, [productId]);
+    lastSeenProductHandler(productId);
+  }, [productId, lastSeenProductHandler]);
 
   return (
-    <ProductSection>
-      {product && <ProductImageGallery productImages={product.images} />}
-      {product && <ProductInfo product={product} />}
-    </ProductSection>
+    <Section>
+      <ProductSection>
+        {product && <ProductImageGallery productImages={product.images} />}
+        {product && <ProductInfo product={product} />}
+      </ProductSection>
+      {product && <ProductList category={product.category}/>}
+    </Section>
   )
 }
