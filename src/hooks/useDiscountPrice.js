@@ -4,7 +4,7 @@ const useDiscountPrice = () => {
   const [discountPrice, setDiscountPrice] = useState(0);
 
   const discountPriceHandler = (params) => {
-    const newPrice = Math.round(params.price * params.discountPercentage) / 100;
+    const newPrice = params.price - (Math.round(params.price * params.discountPercentage) / 100);
     setDiscountPrice(newPrice);
   };
 
