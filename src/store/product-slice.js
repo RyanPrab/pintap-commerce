@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  lastSeenProduct: null
+  lastSeenProduct: 1
 };
 
 const productSlice = createSlice({
