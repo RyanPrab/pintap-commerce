@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CartItem from "../components/Cart/CartItem";
 import CartAction from "../components/Cart/CartAction";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { cartAction } from "../store/cart-slice";
 
 const CartSection = styled.div.attrs(() => ({
   className: `flex flex-col space-y-2`
@@ -24,33 +27,36 @@ const ActionWrapper = styled.div.attrs(() => ({
 }))``;
 
 export default function Cart() {
-  const [myCart, setMyCart] = useState(null);
   const [totalProducts, setTotalProducts] = useState(0);
-  const userId = 5;
+  const params = useParams();
+  const cartId = params.cartId;
+  const dispatch = useDispatch();
 
-  const getMyCart = async (id) => {
+  const getMyCart = useCallback(async (id) => {
     try {
-      const endpoint = `${process.env.REACT_APP_BACKEND_URL}carts/user/${id}`
+      const endpoint = `${process.env.REACT_APP_BACKEND_URL}carts/${id}`
       const response = await fetch(endpoint);
       const data = await response.json();
-      setMyCart(data);
+      dispatch(cartAction.setCart(data));
 
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
         console.error(error);
       }
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
-    getMyCart(userId);
-  }, [userId]);
+    getMyCart(cartId);
+  }, [cartId, getMyCart]);
+
+  const cartState = useSelector(state => state.cart);
 
   useEffect(() => {
-    if (myCart) {
-      setTotalProducts(myCart.carts[0].totalProducts - 1);
+    if (cartState.cart) {
+      setTotalProducts(cartState.cart.totalProducts - 1);
     }
-  }, [myCart]);
+  }, [cartState.cart]);
 
   return (
     <CartSection>
@@ -58,10 +64,10 @@ export default function Cart() {
         My Cart
       </Title>
       <CartWrapper>
-        {myCart &&
+        {cartState.cart &&
           <CartList>
             {
-              myCart?.carts[0]?.products?.map((item, index) => {
+              cartState.cart?.products?.map((item, index) => {
                 return (
                   <CartItem
                     key={index}
@@ -74,7 +80,7 @@ export default function Cart() {
           </CartList>
         }
         <ActionWrapper>
-          {myCart && <CartAction cart={myCart?.carts[0]}/>}
+          {cartState.cart && <CartAction cart={cartState.cart}/>}
         </ActionWrapper>
       </CartWrapper>
     </CartSection>

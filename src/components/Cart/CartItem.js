@@ -26,7 +26,7 @@ const ProductPrice = styled.div.attrs((props) => ({
 }))``;
 
 const ActionWrapper = styled.div.attrs(() => ({
-  className: `flex flex-col space-y-2 items-end`
+  className: `flex flex-col space-y-2 items-end w-40`
 }))``;
 
 const DeleteSection = styled.div.attrs(() => ({
@@ -74,7 +74,7 @@ export default function CartItem(props) {
     } else {
       setTotalPrice(item.total * qty);
     };
-  }, [isDiscount, item, qty]);
+  }, [isDiscount, item, qty, discountPrice]);
 
   const updateQtyHandler = (params) => {
     const payload = {

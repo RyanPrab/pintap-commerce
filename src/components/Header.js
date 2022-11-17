@@ -59,7 +59,7 @@ export default function Header() {
           </Menu>
           <Menu>
             <MenuItem
-              to="/cart"
+              to="/cart/1"
               isActive={({ isActive }) =>
                 isActive ? 'active' : undefined
               }

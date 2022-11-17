@@ -1,7 +1,10 @@
 import useNotification from "../useNotification";
+import { useDispatch } from 'react-redux';
+import { cartAction } from "../../store/cart-slice";
 
 const useUpdateCart = () => {
   const { showNotification } = useNotification();
+  const dispatch = useDispatch();
   const updateCartHandler = async (payload) => {
     try {
       const endpoint = `${process.env.REACT_APP_BACKEND_URL}carts/${payload.cartId}`;
@@ -11,6 +14,7 @@ const useUpdateCart = () => {
         body: JSON.stringify(payload)
       })
       .then(res => res.json())
+      dispatch(cartAction.setCart(response));
 
       showNotification({
         status: 'success',
