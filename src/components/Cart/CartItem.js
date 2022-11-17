@@ -3,6 +3,7 @@ import useDiscountPrice from '../../hooks/useDiscountPrice';
 import { useState, useEffect } from 'react';
 import { currency } from '../../helpers';
 import { FiTrash } from 'react-icons/fi';
+import useUpdateCart from '../../hooks/Cart/useUpdateCart';
 
 const ProductWrapper = styled.div.attrs((props) => ({
   className: `flex flex-row justify-between p-2 ${!props.lastIndex && ('border-b-4')}`
@@ -55,6 +56,7 @@ export default function CartItem(props) {
   const [isDiscount, setIsDiscount] = useState(false);
   const [qty, setQty] = useState(item.quantity || 1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const { updateCartHandler } = useUpdateCart();
 
   useEffect(() => {
     if (item.discountPercentage || item.discountPercentage > 0) {
@@ -68,11 +70,25 @@ export default function CartItem(props) {
 
   useEffect(() => {
     if (isDiscount) {
-      setTotalPrice(item.discountedPrice);
+      setTotalPrice(discountPrice * qty);
     } else {
-      setTotalPrice(item.total);
+      setTotalPrice(item.total * qty);
     };
-  }, [isDiscount, item]);
+  }, [isDiscount, item, qty]);
+
+  const updateQtyHandler = (params) => {
+    const payload = {
+      cartId: params.cartId,
+      products: [
+        {
+          id: params.productId,
+          quantity: params.qty
+        }
+      ]
+    };
+
+    updateCartHandler(payload);
+  };
 
   return (
     <ProductWrapper
@@ -101,7 +117,13 @@ export default function CartItem(props) {
           <QtyWrapper>
             <QtyButton
               onClick={() => {
+                if (qty < 2) return;
                 setQty(parseInt(qty) - 1);
+                updateQtyHandler({
+                  cartId: 1, // hardcoded because no object from cart response
+                  productId: item.id,
+                  qty: qty
+                });
               }}
             >
               -
@@ -110,7 +132,6 @@ export default function CartItem(props) {
               value={parseInt(qty) || ''}
               onChange={e => {
                 let value = e.target.value.replace(/[^0-9]/, '');
-                // value = value == '' ? 1 : value;
                 value = parseInt(value);
 
                 setQty(value);
@@ -119,6 +140,11 @@ export default function CartItem(props) {
             <QtyButton
               onClick={() => {
                 setQty(parseInt(qty) + 1);
+                updateQtyHandler({
+                  cartId: 1, // hardcoded because no object from cart response
+                  productId: item.id,
+                  qty: qty
+                });
               }}
             >
               +
