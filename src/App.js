@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
 import Notification from './components/Notification';
+import NotFound from './pages/NotFound';
 
 function App() {
   const notificationState = useSelector(state => state.notification);
@@ -44,6 +45,7 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/product/:productId" element={<Product/>}/>
         <Route exact path="/cart/:cartId" element={<Cart/>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
       </main>
     </div>
